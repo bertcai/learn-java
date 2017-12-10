@@ -15,11 +15,13 @@ public class BigNum {
     }
 
     //设置符号
-    public void setSign(boolean a){
+    public void setSign(boolean a) {
         this.sign = a;
     }
+
     //构造函数
     BigNum(String a) {
+//        System.out.println(a.length());
         char si = a.charAt(0);
         if (si == '+') {
             this.sign = true;
@@ -28,6 +30,15 @@ public class BigNum {
         if (si == '-') {
             this.sign = false;
             a = a.substring(1);
+        }
+        //去除前面无意义的0
+        if(a.length()>1) {
+            while (si == '0') {
+                if(a.length()==1)
+                    break;
+                a = a.substring(1);
+                si = a.charAt(0);
+            }
         }
         this.value = a;
     }
@@ -50,14 +61,13 @@ public class BigNum {
 
     public int compare(BigNum b) {
         if (this.sign != b.sign) {
-            return this.sign==true ? 1:-1;
+            return this.sign == true ? 1 : -1;
         }
-        if (this.value.length()!=b.value.length()) {
+        if (this.value.length() != b.value.length()) {
             if (this.sign) {
-                return this.value.length()>b.value.length() ? 1:-1;
-            }
-            else {
-                return this.value.length()<b.value.length() ? 1:-1;
+                return this.value.length() > b.value.length() ? 1 : -1;
+            } else {
+                return this.value.length() < b.value.length() ? 1 : -1;
             }
         }
         int tmp = this.value.compareTo(b.value);
@@ -106,7 +116,7 @@ public class BigNum {
         int bLength = bArray.length;
 
         //整数相加最大位数为两数大的位数+1
-        int maxLength = aLength > bLength ? aLength : bLength;
+        int maxLength = aLength >= bLength ? aLength : bLength;
         int[] result = new int[maxLength + 1];
 
         //按位相加
@@ -119,8 +129,8 @@ public class BigNum {
 
         //处理进位
         for (int i = 0; i < maxLength; i++) {
-            if (result[i] > 10) {
-                result[i + 1] = result[i + 1] + 1;
+            if (result[i] >= 10) {
+                result[i + 1] += result[i] / 10;
                 result[i] = result[i] % 10;
             }
         }
@@ -191,7 +201,7 @@ public class BigNum {
         }
 
         //为0时
-        if (realResult.equals(""))
+        if (realResult.toString().equals(""))
             realResult.append('0');
         return new BigNum(realResult.toString());
     }
@@ -278,7 +288,7 @@ public class BigNum {
         //转化结果
         StringBuffer realResult = new StringBuffer();
         if (si == '-')
-            realResult.append(sign);
+            realResult.append(si);
         boolean isBegin = true;
         for (int i = maxLength - 1; i >= 0; i--) {
             if (result[i] == 0 && isBegin)
@@ -287,8 +297,9 @@ public class BigNum {
                 isBegin = false;
             realResult.append(result[i]);
         }
-        if (realResult.toString() == "")
+        if (realResult.toString().equals("")) {
             realResult.append('0');
+        }
         return new BigNum(realResult.toString());
     }
 
@@ -330,9 +341,13 @@ public class BigNum {
         return quotien;
     }
 
-    public BigNum mod(BigNum b){
+    public BigNum mod(BigNum b) {
         BigNum tmp = this.divide(b);
         tmp = tmp.multiply(b);
-        return this.subtract(tmp);
+        BigNum mod = this.subtract(tmp);
+        if(!mod.sign)
+            return mod.add(b);
+        else
+            return mod;
     }
 }
