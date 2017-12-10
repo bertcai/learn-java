@@ -32,9 +32,9 @@ public class BigNum {
             a = a.substring(1);
         }
         //去除前面无意义的0
-        if(a.length()>1) {
+        if (a.length() > 1) {
             while (si == '0') {
-                if(a.length()==1)
+                if (a.length() == 1)
                     break;
                 a = a.substring(1);
                 si = a.charAt(0);
@@ -345,7 +345,7 @@ public class BigNum {
         BigNum tmp = this.divide(b);
         tmp = tmp.multiply(b);
         BigNum mod = this.subtract(tmp);
-        if(!mod.sign)
+        if (!mod.sign)
             return mod.add(b);
         else
             return mod;

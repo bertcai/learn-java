@@ -8,11 +8,11 @@ public class TestCase {
         String a = "", b = "";
         for (int i = 0; i < 40; i++) {
             int t = (int) (Math.random() * 10);
-            a+= t;
+            a += t;
         }
         for (int i = 0; i < 40; i++) {
             int t = (int) (Math.random() * 10);
-            b+= t;
+            b += t;
         }
 
 //        a = "-"+a;
