@@ -7,26 +7,100 @@ import java.math.*;
 
 public class BigNum {
     private String value;
+    private boolean sign = true; //大数的符号
 
     //获取值
     public String getValue() {
-        return value;
+        return this.value;
     }
 
+    //设置符号
+    public void setSign(boolean a){
+        this.sign = a;
+    }
     //构造函数
     BigNum(String a) {
-        value = a;
+        char si = a.charAt(0);
+        if (si == '+') {
+            this.sign = true;
+            a = a.substring(1);
+        }
+        if (si == '-') {
+            this.sign = false;
+            a = a.substring(1);
+        }
+        this.value = a;
     }
 
 
     //将大数字符串转化成字符数组，低位在前高位在后，便于计算
     public char[] toArray() {
-        return new StringBuffer(value).reverse().toString().toCharArray();
+        return new StringBuffer(this.value).reverse().toString().toCharArray();
+    }
+
+    //打印结果
+    public String toString() {
+        if (!this.sign)
+            return ("-" + this.value);
+        else
+            return this.value;
+    }
+
+    //比较大小
+
+    public int compare(BigNum b) {
+        if (this.sign != b.sign) {
+            return this.sign==true ? 1:-1;
+        }
+        if (this.value.length()!=b.value.length()) {
+            if (this.sign) {
+                return this.value.length()>b.value.length() ? 1:-1;
+            }
+            else {
+                return this.value.length()<b.value.length() ? 1:-1;
+            }
+        }
+        int tmp = this.value.compareTo(b.value);
+        if (this.sign) {
+            tmp *= -1;
+        }
+        if (tmp > 0) {
+            return -1;
+        }
+        if (tmp < 0) {
+            return 1;
+        }
+        return tmp;
+    }
+
+    //比较绝对值大小
+    public int absCompare(BigNum b) {
+        char[] aArray = new StringBuffer(this.value).reverse().toString().toCharArray();
+        char[] bArray = b.toArray();
+        int aLength = aArray.length;
+        int bLength = bArray.length;
+        if (aLength > bLength) {
+            return 1;
+        } else {
+            if (aLength < bLength) {
+                return -1;
+            } else {
+                int i = 0;
+                while (i < aLength && aArray[i] == bArray[i])
+                    i++;
+                if (i == aLength)
+                    return 0;
+                if ((aArray[i] - '0') > (bArray[i] - '0'))
+                    return 1;
+                else
+                    return -1;
+            }
+        }
     }
 
     public BigNum unsignedAdd(BigNum b) {
         //获取数的数组
-        char[] aArray = new StringBuffer(value).reverse().toString().toCharArray();
+        char[] aArray = new StringBuffer(this.value).reverse().toString().toCharArray();
         char[] bArray = b.toArray();
         int aLength = aArray.length;
         int bLength = bArray.length;
@@ -64,7 +138,7 @@ public class BigNum {
 
     public BigNum unsignedSubtract(BigNum b) {
         //获取数的数组
-        char[] aArray = new StringBuffer(value).reverse().toString().toCharArray();
+        char[] aArray = new StringBuffer(this.value).reverse().toString().toCharArray();
         char[] bArray = b.toArray();
         int aLength = aArray.length;
         int bLength = bArray.length;
@@ -74,22 +148,22 @@ public class BigNum {
         int[] result = new int[maxLength];
 
         //判断正负号
-        char sign = '+';
+        boolean si = true;
         if (aLength < bLength)
-            sign = '-';
+            si = false;
         else if (aLength == bLength) {
             int i = maxLength - 1;
             while (i > 0 && aArray[i] == bArray[i])
                 i--;
             if (aArray[i] < bArray[i])
-                sign = '-';
+                si = false;
         }
 
         //计算结果
         for (int i = 0; i < maxLength; i++) {
             int aInt = i < aLength ? aArray[i] - '0' : 0;
             int bInt = i < bLength ? bArray[i] - '0' : 0;
-            if (sign == '-')
+            if (!si)
                 result[i] = bInt - aInt;
             else
                 result[i] = aInt - bInt;
@@ -105,7 +179,7 @@ public class BigNum {
 
         //转化结果
         StringBuffer realResult = new StringBuffer();
-        if (sign == '-')
+        if (!si)
             realResult.append('-');
         boolean isBegin = true;
         for (int i = maxLength - 1; i >= 0; i--) {
@@ -123,84 +197,62 @@ public class BigNum {
     }
 
     public BigNum add(BigNum b) {
-        //计算符号位
-        BigNum a = new BigNum(value);
-        char signA = '+';
-        char signB = '+';
-        char t_signA = a.getValue().charAt(0);
-        char t_signB = b.getValue().charAt(0);
-        if (t_signA == '+' || t_signA == '-') {
-            signA = t_signA;
-            a = new BigNum(a.getValue().substring(1));
-        }
-        if (t_signB == '+' || t_signB == '-') {
-            signB = t_signB;
-            b = new BigNum(b.getValue().substring(1));
-        }
         //计算
-        if (signA == '-' && signB == '-') {
-            BigNum temp = a.unsignedAdd(b);
+        if (!this.sign && !b.sign) {
+            BigNum temp = this.unsignedAdd(b);
             String s = temp.getValue();
             s = "-" + s;
             return new BigNum(s);
-        } else if (signA == '-' && signB == '+') {
-            return b.unsignedSubtract(a);
-        } else if (signA == '+' && signB == '-') {
-            return a.unsignedSubtract(b);
+        } else if (!this.sign && b.sign) {
+            return b.unsignedSubtract(this);
+        } else if (this.sign && !b.sign) {
+            return this.unsignedSubtract(b);
         } else {
-            return a.unsignedAdd(b);
+            return this.unsignedAdd(b);
         }
     }
 
     public BigNum subtract(BigNum b) {
-        //计算符号位
-        BigNum a = new BigNum(value);
-        char signA = '+';
-        char signB = '+';
-        char t_signA = a.getValue().charAt(0);
-        char t_signB = b.getValue().charAt(0);
-        if (t_signA == '+' || t_signA == '-') {
-            signA = t_signA;
-            a = new BigNum(a.getValue().substring(1));
-        }
-        if (t_signB == '+' || t_signB == '-') {
-            signB = t_signB;
-            b = new BigNum(b.getValue().substring(1));
-        }
+//        //计算符号位
+//        BigNum a = new BigNum(this.value);
+//        char signA = '+';
+//        char signB = '+';
+//        char t_signA = a.getValue().charAt(0);
+//        char t_signB = b.getValue().charAt(0);
+//        if (t_signA == '+' || t_signA == '-') {
+//            signA = t_signA;
+//            a = new BigNum(a.getValue().substring(1));
+//        }
+//        if (t_signB == '+' || t_signB == '-') {
+//            signB = t_signB;
+//            b = new BigNum(b.getValue().substring(1));
+//        }
         //计算
-        if (signA == '-' && signB == '-') {
-            return b.unsignedSubtract(a);
-        } else if (signA == '-' && signB == '+') {
-            BigNum temp = a.unsignedAdd(b);
+        if (!this.sign && !b.sign) {
+            return b.unsignedSubtract(this);
+        } else if (!this.sign && b.sign) {
+            BigNum temp = this.unsignedAdd(b);
             String s = temp.getValue();
             s = "-" + s;
             return new BigNum(s);
-        } else if (signA == '+' && signB == '-') {
-            return a.unsignedAdd(b);
+        } else if (this.sign && !b.sign) {
+            return this.unsignedAdd(b);
         } else {
-            return a.unsignedSubtract(b);
+            return this.unsignedSubtract(b);
         }
     }
 
     public BigNum multiply(BigNum b) {
         //计算符号位
-        char signA = value.charAt(0);
-        char signB = b.getValue().charAt(0);
-        char sign = '+';
-        if (signA == '+' || signA == '-') {
-            sign = signA;
-            value = value.substring(1);
-        }
-        if (signB == '+' || signB == '-') {
-            if (sign == signB)
-                sign = '+';
-            else
-                sign = '-';
-            b = new BigNum(b.getValue().substring(1));
+        char si;
+        if (this.sign == b.sign) {
+            si = '+';
+        } else {
+            si = '-';
         }
 
         //获取数组
-        char[] aArray = new StringBuffer(value).reverse().toString().toCharArray();
+        char[] aArray = new StringBuffer(this.value).reverse().toString().toCharArray();
         char[] bArray = b.toArray();
         int aLength = aArray.length;
         int bLength = bArray.length;
@@ -225,7 +277,7 @@ public class BigNum {
         }
         //转化结果
         StringBuffer realResult = new StringBuffer();
-        if (sign == '-')
+        if (si == '-')
             realResult.append(sign);
         boolean isBegin = true;
         for (int i = maxLength - 1; i >= 0; i--) {
@@ -241,21 +293,46 @@ public class BigNum {
     }
 
 
+    public BigNum divide(BigNum b) {
+        //除数不能为0
+        if (b.getValue().equals("0")) {
+            System.out.println("Divide by 0!");
+            return new BigNum("error");
+        }
+        //计算符号位
+        boolean si = !(this.sign ^ b.sign);
 
 
+        //比较被除数与除数的大小
+        if (this.absCompare(b) == -1)
+            return new BigNum("0");
 
-    //初次简单测试加法
-    public static void main(String[] args) {
-        BigNum a = new BigNum("88900988");
-        BigNum b = new BigNum("7878778888");
-        BigInteger c = new BigInteger("88900988");
-        BigInteger d = new BigInteger("7878778888");
-        System.out.println(a.add(b).getValue());
-        System.out.println(a.subtract(b).getValue());
-        System.out.println(a.multiply(b).getValue());
-        System.out.println(c.add(d));
-        System.out.println(c.subtract(d));
-        System.out.println(c.multiply(d));
+        String x = this.value, y = b.value, addZero = new String("1");
+        int cnt = x.length() - y.length(); //被除数与除数相差位数
+        for (int i = 0; i < cnt; i++) {
+            y += "0";
+            addZero += "0";
+        }
 
+        BigNum divA = new BigNum(x), divB = new BigNum(y);
+        BigNum quotien = new BigNum("0");
+        while (cnt >= 0) {
+            BigNum addBI = new BigNum(addZero);
+            while (divA.compare(divB) >= 0) {
+                quotien = quotien.add(addBI);
+                divA = divA.subtract(divB);
+            }
+            divB = new BigNum(divB.value.substring(0, Math.max(1, divB.value.length() - 1)));
+            addZero = addZero.substring(0, Math.max(1, cnt));
+            cnt--;
+        }
+        quotien.setSign(si);
+        return quotien;
+    }
+
+    public BigNum mod(BigNum b){
+        BigNum tmp = this.divide(b);
+        tmp = tmp.multiply(b);
+        return this.subtract(tmp);
     }
 }
