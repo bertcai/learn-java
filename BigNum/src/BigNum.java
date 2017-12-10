@@ -3,6 +3,8 @@
  * 将大数在进行表示时使用字符串进行表示，计算时转化成数组，进行计算。
  */
 
+import java.math.*;
+
 public class BigNum {
     private String value;
 
@@ -22,7 +24,7 @@ public class BigNum {
         return new StringBuffer(value).reverse().toString().toCharArray();
     }
 
-    public BigNum add(BigNum b) {
+    public BigNum unsignedAdd(BigNum b) {
         //获取数的数组
         char[] aArray = new StringBuffer(value).reverse().toString().toCharArray();
         char[] bArray = b.toArray();
@@ -60,7 +62,7 @@ public class BigNum {
         return new BigNum(realResult.toString());
     }
 
-    public BigNum subtract(BigNum b) {
+    public BigNum unsignedSubtract(BigNum b) {
         //获取数的数组
         char[] aArray = new StringBuffer(value).reverse().toString().toCharArray();
         char[] bArray = b.toArray();
@@ -103,11 +105,11 @@ public class BigNum {
 
         //转化结果
         StringBuffer realResult = new StringBuffer();
-        if(sign == '-')
+        if (sign == '-')
             realResult.append('-');
         boolean isBegin = true;
-        for(int i = maxLength-1;i>0;i--){
-            if(result[i]==0&&isBegin)
+        for (int i = maxLength - 1; i >= 0; i--) {
+            if (result[i] == 0 && isBegin)
                 continue;
             else
                 isBegin = false;
@@ -115,18 +117,145 @@ public class BigNum {
         }
 
         //为0时
-        if(realResult.equals(""))
+        if (realResult.equals(""))
             realResult.append('0');
         return new BigNum(realResult.toString());
     }
 
-    
+    public BigNum add(BigNum b) {
+        //计算符号位
+        BigNum a = new BigNum(value);
+        char signA = '+';
+        char signB = '+';
+        char t_signA = a.getValue().charAt(0);
+        char t_signB = b.getValue().charAt(0);
+        if (t_signA == '+' || t_signA == '-') {
+            signA = t_signA;
+            a = new BigNum(a.getValue().substring(1));
+        }
+        if (t_signB == '+' || t_signB == '-') {
+            signB = t_signB;
+            b = new BigNum(b.getValue().substring(1));
+        }
+        //计算
+        if (signA == '-' && signB == '-') {
+            BigNum temp = a.unsignedAdd(b);
+            String s = temp.getValue();
+            s = "-" + s;
+            return new BigNum(s);
+        } else if (signA == '-' && signB == '+') {
+            return b.unsignedSubtract(a);
+        } else if (signA == '+' && signB == '-') {
+            return a.unsignedSubtract(b);
+        } else {
+            return a.unsignedAdd(b);
+        }
+    }
+
+    public BigNum subtract(BigNum b) {
+        //计算符号位
+        BigNum a = new BigNum(value);
+        char signA = '+';
+        char signB = '+';
+        char t_signA = a.getValue().charAt(0);
+        char t_signB = b.getValue().charAt(0);
+        if (t_signA == '+' || t_signA == '-') {
+            signA = t_signA;
+            a = new BigNum(a.getValue().substring(1));
+        }
+        if (t_signB == '+' || t_signB == '-') {
+            signB = t_signB;
+            b = new BigNum(b.getValue().substring(1));
+        }
+        //计算
+        if (signA == '-' && signB == '-') {
+            return b.unsignedSubtract(a);
+        } else if (signA == '-' && signB == '+') {
+            BigNum temp = a.unsignedAdd(b);
+            String s = temp.getValue();
+            s = "-" + s;
+            return new BigNum(s);
+        } else if (signA == '+' && signB == '-') {
+            return a.unsignedAdd(b);
+        } else {
+            return a.unsignedSubtract(b);
+        }
+    }
+
+    public BigNum multiply(BigNum b) {
+        //计算符号位
+        char signA = value.charAt(0);
+        char signB = b.getValue().charAt(0);
+        char sign = '+';
+        if (signA == '+' || signA == '-') {
+            sign = signA;
+            value = value.substring(1);
+        }
+        if (signB == '+' || signB == '-') {
+            if (sign == signB)
+                sign = '+';
+            else
+                sign = '-';
+            b = new BigNum(b.getValue().substring(1));
+        }
+
+        //获取数组
+        char[] aArray = new StringBuffer(value).reverse().toString().toCharArray();
+        char[] bArray = b.toArray();
+        int aLength = aArray.length;
+        int bLength = bArray.length;
+
+        //两数相乘，最大位数为两大整数之和
+        int maxLength = aLength + bLength;
+        int[] result = new int[maxLength];
+
+        //计算结果，第i位于第j位相乘的结果是第i+j位的结果
+        for (int i = 0; i < aLength; i++) {
+            for (int j = 0; j < bLength; j++) {
+                result[i + j] = result[i + j] + (aArray[i] - '0') * (bArray[j] - '0');
+            }
+        }
+
+        //处理进位
+        for (int i = 0; i < maxLength - 1; i++) {
+            if (result[i] > 10) {
+                result[i + 1] = result[i + 1] + result[i] / 10;
+                result[i] = result[i] % 10;
+            }
+        }
+        //转化结果
+        StringBuffer realResult = new StringBuffer();
+        if (sign == '-')
+            realResult.append(sign);
+        boolean isBegin = true;
+        for (int i = maxLength - 1; i >= 0; i--) {
+            if (result[i] == 0 && isBegin)
+                continue;
+            else
+                isBegin = false;
+            realResult.append(result[i]);
+        }
+        if (realResult.toString() == "")
+            realResult.append('0');
+        return new BigNum(realResult.toString());
+    }
+
+
+
+
 
     //初次简单测试加法
     public static void main(String[] args) {
         BigNum a = new BigNum("88900988");
         BigNum b = new BigNum("7878778888");
+        BigInteger c = new BigInteger("88900988");
+        BigInteger d = new BigInteger("7878778888");
         System.out.println(a.add(b).getValue());
         System.out.println(a.subtract(b).getValue());
+        System.out.println(a.multiply(b).getValue());
+        System.out.println(c.add(d));
+        System.out.println(c.subtract(d));
+        System.out.println(c.multiply(d));
+
     }
 }
