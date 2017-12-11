@@ -34,6 +34,7 @@ public class TestCase {
         System.out.println(x.multiply(y).toString());
         System.out.println(x.divide(y).toString());
         System.out.println(x.mod(y).toString());
+        System.out.println(x.divideMod(y));
 
         System.out.println("This is result: ");
         System.out.println(x.add(y).toString().equals(m.add(n).toString()));
