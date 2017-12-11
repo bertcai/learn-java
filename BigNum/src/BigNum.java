@@ -3,7 +3,6 @@
  * 将大数在进行表示时使用字符串进行表示，计算时转化成数组，进行计算。
  */
 
-import java.math.*;
 
 public class BigNum {
     private String value;
@@ -71,22 +70,22 @@ public class BigNum {
             }
         }
         int tmp = this.value.compareTo(b.value);
-        if (this.sign) {
+        if (!this.sign) {
             tmp *= -1;
         }
-        if (tmp > 0) {
-            return -1;
-        }
-        if (tmp < 0) {
-            return 1;
-        }
+//        if (tmp > 0) {
+//            return -1;
+//        }
+//        if (tmp < 0) {
+//            return 1;
+//        }
         return tmp;
     }
 
     //比较绝对值大小
     public int absCompare(BigNum b) {
-        char[] aArray = new StringBuffer(this.value).reverse().toString().toCharArray();
-        char[] bArray = b.toArray();
+        char[] aArray = new StringBuffer(this.value).toString().toCharArray();
+        char[] bArray = new StringBuffer(b.getValue()).toString().toCharArray();
         int aLength = aArray.length;
         int bLength = bArray.length;
         if (aLength > bLength) {
@@ -280,7 +279,7 @@ public class BigNum {
 
         //处理进位
         for (int i = 0; i < maxLength - 1; i++) {
-            if (result[i] > 10) {
+            if (result[i] >= 10) {
                 result[i + 1] = result[i + 1] + result[i] / 10;
                 result[i] = result[i] % 10;
             }
