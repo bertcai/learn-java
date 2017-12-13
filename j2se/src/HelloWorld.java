@@ -29,41 +29,45 @@
 //
 //}
 
-class Animal{
+import java.util.*;
+
+class Animal {
     public String food; //what to eat
     public String location; //where to live
 
-    public void makeNoise(){ //make noise
+    public void makeNoise() { //make noise
         System.out.println("noise");
     }
-    public void sleep(){
+
+    public void sleep() {
         System.out.println("sleeping");
     }
-    public vodi eat(){
+
+    public void eat() {
         System.out.println("eat");
     }
 }
 
-class Dog extends Animal{
-    public void makeNoise(){
+class Dog extends Animal {
+    public void makeNoise() {
         System.out.println("Wha,Wha");
     }
 }
 
-class Cat extends Animal{
-    public void makeNoise(){
+class Cat extends Animal {
+    public void makeNoise() {
         System.out.println("Miao,Miao");
     }
 }
 
-class Vet{
-    public void giveShout(Animal a){
+class Vet {
+    public void giveShout(Animal a) {
         a.makeNoise();
     }
 }
 
-class PetOwner{
-    public void start(){
+class PetOwner {
+    public void start() {
         Vet v = new Vet();
         Dog d = new Dog();
         Cat c = new Cat();
@@ -119,11 +123,12 @@ public class HelloWorld {
 //        }
 //        temp = a/b;
 //        System.out.println(a+" "+b+" "+temp);
-        for(int i = 100;i<=999;i++){
-            int a = i/100;
-            int b = (i%100)/10;
-            int c = i%10;
-            if(i == (a*a*a + b*b*b + c*c*c))
+        System.out.println(String.format("%tc", new Date()));
+        for (int i = 100; i <= 999; i++) {
+            int a = i / 100;
+            int b = (i % 100) / 10;
+            int c = i % 10;
+            if (i == (a * a * a + b * b * b + c * c * c))
                 System.out.println(i);
         }
     }
