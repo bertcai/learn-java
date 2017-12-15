@@ -1,5 +1,5 @@
 public class TestCase {
-    public static void main (String[] args){
+    public static void main(String[] args) {
         Storage storage = new Storage();
 
         Producer p1 = new Producer(storage);
