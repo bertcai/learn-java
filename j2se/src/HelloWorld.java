@@ -29,8 +29,55 @@
 //
 //}
 
-import java.util.Scanner;
-import java.math.MathContext;
+import java.util.*;
+
+class Animal {
+    public String food; //what to eat
+    public String location; //where to live
+
+    public void makeNoise() { //make noise
+        System.out.println("noise");
+    }
+
+    public void sleep() {
+        System.out.println("sleeping");
+    }
+
+    public void eat() {
+        System.out.println("eat");
+    }
+}
+
+class Dog extends Animal {
+    public void makeNoise() {
+        System.out.println("Wha,Wha");
+    }
+}
+
+class Cat extends Animal {
+    public void makeNoise() {
+        System.out.println("Miao,Miao");
+    }
+}
+
+class Vet {
+    public void giveShout(Animal a) {
+        a.makeNoise();
+    }
+}
+
+class PetOwner {
+    public void start() {
+        Vet v = new Vet();
+        Dog d = new Dog();
+        Cat c = new Cat();
+
+        v.giveShout(d);
+        v.giveShout(c);
+    }
+}
+
+
 public class HelloWorld {
     public static void main(String[] args) {
 //        Scanner s = new Scanner(System.in);
@@ -76,11 +123,12 @@ public class HelloWorld {
 //        }
 //        temp = a/b;
 //        System.out.println(a+" "+b+" "+temp);
-        for(int i = 100;i<=999;i++){
-            int a = i/100;
-            int b = (i%100)/10;
-            int c = i%10;
-            if(i == (a*a*a + b*b*b + c*c*c))
+        System.out.println(String.format("%tc", new Date()));
+        for (int i = 100; i <= 999; i++) {
+            int a = i / 100;
+            int b = (i % 100) / 10;
+            int c = i % 10;
+            if (i == (a * a * a + b * b * b + c * c * c))
                 System.out.println(i);
         }
     }

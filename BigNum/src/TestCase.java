@@ -1,9 +1,6 @@
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
 import java.math.BigInteger;
 
 public class TestCase {
-
     public static void main(String[] args) {
         String a = "", b = "";
         for (int i = 0; i < 40; i++) {
@@ -14,7 +11,6 @@ public class TestCase {
             int t = (int) (Math.random() * 10);
             b += t;
         }
-
 //        a = "-"+a;
 //        b = "-"+b;
         BigNum x = new BigNum(a);
@@ -38,6 +34,7 @@ public class TestCase {
         System.out.println(x.multiply(y).toString());
         System.out.println(x.divide(y).toString());
         System.out.println(x.mod(y).toString());
+        System.out.println(x.divideMod(y));
 
         System.out.println("This is result: ");
         System.out.println(x.add(y).toString().equals(m.add(n).toString()));
@@ -47,15 +44,14 @@ public class TestCase {
         System.out.println(x.mod(y).toString().equals(m.mod(n).toString()));
 
 
-//        BigNum a = new BigNum("2238315117249912249398702771272189240702");
-//        BigNum b = new BigNum("0256260089943676888682445390856578962923");
-//        BigInteger c = new BigInteger("2238315117249912249398702771272189240702");
-//        BigInteger d = new BigInteger("0256260089943676888682445390856578962923");
+//        BigNum a = new BigNum("6167618965500123469260335414289718044251");
+//        BigNum b = new BigNum("5234184371808699988936047248945539693859");
+//        BigInteger c = new BigInteger("6167618965500123469260335414289718044251");
+//        BigInteger d = new BigInteger("5234184371808699988936047248945539693859");
 ////        BigNum a = new BigNum("88");
 ////        BigNum b = new BigNum("787");
 ////        BigInteger c = new BigInteger("88");
 ////        BigInteger d = new BigInteger("787");
-//
 //
 //
 //        System.out.println(a.add(b).toString());
