@@ -9,6 +9,7 @@ public class Square {
         double x1 = a.getX(), x2 = b.getX(), y1 = a.getY(), y2 = b.getY();
         return 0.5 * (x1 * y2 - x2 * y1);
     }
+
     public static void main(String[] args) {
         ArrayList<Vertex> polygonVertex = new ArrayList<>();
         Square s = new Square();
@@ -25,7 +26,7 @@ public class Square {
         double square = 0;
         for (int i = 0; i < 4; i++) {
 //            double temp = s.triangleSquare(polygonVertex[i],polygonVertex[i+1]);
-            square += s.triangleSquare(polygonVertex.get(i), polygonVertex.get(i+1));
+            square += s.triangleSquare(polygonVertex.get(i), polygonVertex.get(i + 1));
         }
         square += s.triangleSquare(polygonVertex.get(4), polygonVertex.get(0));
         square = Math.abs(square);

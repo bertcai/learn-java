@@ -6,14 +6,14 @@ public class Vertex {
 //    private double degree;
 //    private double distanceToO;
 
-    Vertex(){
-        x =0;
-        y=0;
+    Vertex() {
+        x = 0;
+        y = 0;
 //        degree = 0;
 //        distanceToO = 0;
     }
 
-    Vertex(double x,double y){
+    Vertex(double x, double y) {
         this.x = x;
         this.y = y;
 //        if(x == 0&&y==0)
@@ -35,7 +35,7 @@ public class Vertex {
         return x;
     }
 
-    public double getY(){
+    public double getY() {
         return y;
     }
 
