@@ -1,4 +1,4 @@
-
+import java.util.ArrayList;
 
 public class Vertex {
     private double x;
