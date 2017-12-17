@@ -1,6 +1,3 @@
-//interface map
-
-import javax.sound.midi.Soundbank;
 import java.util.*;
 
 public class MyMap<K, V> implements Map<K, V> {
@@ -169,27 +166,27 @@ public class MyMap<K, V> implements Map<K, V> {
         return col;
     }
 
-    public static void main(String[] args) {
-        MyMap<Integer, Integer> map = new MyMap<>();
-        MyMap<Integer, Integer> map2 = new MyMap<>();
-        for (int i = 0; i < 5; i++) {
-            map.put(i, i);
-            map2.put(i, i+1);
-        }
-        System.out.println(map.entrySet().toString());
-        System.out.println(map2.entrySet().toString());
-        map.putAll(map2);
-        System.out.println(map.entrySet().toString());
-        System.out.println(map.size());
-        System.out.println(map.isEmpty());
-        System.out.println(map.keySet().toString());
-        System.out.println(map.values().toString());
-        System.out.println(map.containsKey(2));
-        System.out.println(map.containsValue(2));
-        System.out.println(map.get(2));
-        System.out.println(map.remove(2));
-        System.out.println(map.entrySet().toString());
-        map.clear();
-        System.out.println(map.entrySet().toString());
-    }
+//    public static void main(String[] args) {
+//        MyMap<Integer, Integer> map = new MyMap<>();
+//        MyMap<Integer, Integer> map2 = new MyMap<>();
+//        for (int i = 0; i < 5; i++) {
+//            map.put(i, i);
+//            map2.put(i, i + 1);
+//        }
+//        System.out.println(map.entrySet().toString());
+//        System.out.println(map2.entrySet().toString());
+//        map.putAll(map2);
+//        System.out.println(map.entrySet().toString());
+//        System.out.println(map.size());
+//        System.out.println(map.isEmpty());
+//        System.out.println(map.keySet().toString());
+//        System.out.println(map.values().toString());
+//        System.out.println(map.containsKey(2));
+//        System.out.println(map.containsValue(2));
+//        System.out.println(map.get(2));
+//        System.out.println(map.remove(2));
+//        System.out.println(map.entrySet().toString());
+//        map.clear();
+//        System.out.println(map.entrySet().toString());
+//    }
 }
