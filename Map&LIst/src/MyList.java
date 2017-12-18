@@ -87,8 +87,27 @@ public class MyList<E> extends AbstractCollection<E> implements List<E> {
         return a;
     }
 
+    private String outOfBoundsMsg(int var1) {
+        return "Index: " + var1 + ", Size: " + this.size;
+    }
+
+
+    private void rangeCheck(int var1) {
+        if (var1 < 0 || var1 >= this.size) {
+            throw new IndexOutOfBoundsException(this.outOfBoundsMsg(var1));
+        }
+    }
+
+    private void rangeCheckAdd(int var1) {
+        if (var1 < 0 || var1 > this.size) {
+            throw new IndexOutOfBoundsException(this.outOfBoundsMsg(var1));
+        }
+    }
+
+
     @Override
     public E get(int index) {
+        rangeCheck(index);
         return elementData[index];
     }
 
@@ -99,10 +118,13 @@ public class MyList<E> extends AbstractCollection<E> implements List<E> {
 
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
+        rangeCheckAdd(index);
         int cSize = c.size();
         E[] newElementData;
         Object[] a = c.toArray();
-        newElementData = Arrays.copyOf(elementData, index + cSize);
+//        newElementData = Arrays.copyOf(elementData, index + cSize);
+        newElementData = (E[])(new Object[index + cSize]);
+        System.arraycopy(elementData, 0, newElementData, 0, size);
         elementData = newElementData;
         if (cSize == 0)
             return false;
@@ -114,14 +136,17 @@ public class MyList<E> extends AbstractCollection<E> implements List<E> {
     @Override
     public boolean add(E e) {
         E[] newElementData;
-        newElementData = Arrays.copyOf(elementData, size + 1);
-        newElementData[size++] = e;
-        elementData = (E[]) newElementData;
+
+        newElementData = (E[])(new Object[size+1]);
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
+        elementData[size++] = e;
         return true;
     }
 
     @Override
     public void add(int index, E element) {
+        rangeCheck(index);
         E[] newElementData;
         newElementData = Arrays.copyOf(elementData, size + 1);
         elementData = (E[]) newElementData;
@@ -130,20 +155,31 @@ public class MyList<E> extends AbstractCollection<E> implements List<E> {
         elementData[index] = element;
     }
 
+    public void subListRangeCheck(int var0, int var1, int var2) {
+        if (var0 < 0) {
+            throw new IndexOutOfBoundsException("fromIndex = " + var0);
+        } else if (var1 > var2) {
+            throw new IndexOutOfBoundsException("toIndex = " + var1);
+        } else if (var0 > var1) {
+            throw new IllegalArgumentException("fromIndex(" + var0 + ") > toIndex(" + var1 + ")");
+        }
+    }
+
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
+        subListRangeCheck(fromIndex,toIndex,size);
         Object[] newElementData = new Object[toIndex - fromIndex];
         int temp = 0;
         for (int i = fromIndex; i < toIndex; i++) {
             newElementData[temp] = this.elementData[i];
             temp++;
         }
-        newElementData = (E[]) newElementData;
-        return new MyList(newElementData);
+        return new MyList((E[])newElementData);
     }
 
     @Override
     public E set(int index, E element) {
+        rangeCheck(index);
         E oldElem = elementData[index];
         this.elementData[index] = element;
         return oldElem;
@@ -151,6 +187,7 @@ public class MyList<E> extends AbstractCollection<E> implements List<E> {
 
     @Override
     public ListIterator<E> listIterator(int index) {
+        rangeCheck(index);
         return new ListIterator<E>() {
             int cursor = index;
 
@@ -236,6 +273,7 @@ public class MyList<E> extends AbstractCollection<E> implements List<E> {
 
     @Override
     public E remove(int index) {
+        rangeCheck(index);
         E oldValue = elementData[index];
         fastRemove(index);
         return oldValue;
