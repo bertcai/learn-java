@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Consumer implements Runnable {
     private int num = 1;
     private int testNum = 20;
@@ -16,5 +18,7 @@ public class Consumer implements Runnable {
         while (testNum-- > 0) {
             this.consume();
         }
+
+        ArrayList
     }
 }
