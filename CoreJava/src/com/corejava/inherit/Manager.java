@@ -21,6 +21,26 @@ public class Manager extends Employee {
         return baseSalary + bonus;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        Manager orther = (Manager) obj;
+        return bonus == orther.bonus;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() + 17 * new Double(bonus).hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "[bonus=" + bonus + "]";
+    }
+
     public void setBonus(double bonus) {
         this.bonus = bonus;
     }
